@@ -5,5 +5,7 @@ import lombok.Getter;
 @Getter
 public class OrderDTO {
 
-    private String name;
+    private String coffeeName;
+    private Long id ;
 }
+

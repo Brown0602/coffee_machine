@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface CoffeeMachineService {
 
     Optional<CoffeeMachine> getCoffeeMachine();
+
+    String findPopularDrink();
 }

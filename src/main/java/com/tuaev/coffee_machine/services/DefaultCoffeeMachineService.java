@@ -12,9 +12,15 @@ import java.util.Optional;
 public class DefaultCoffeeMachineService implements CoffeeMachineService{
 
     private CoffeeMachineRepo coffeeMachineRepo;
+    private OrderService orderService;
 
     @Override
     public Optional<CoffeeMachine> getCoffeeMachine() {
         return coffeeMachineRepo.findById(2L);
     }
+
+  @Override
+  public String findPopularDrink() {
+    return orderService.findPopularDrink();
+  }
 }

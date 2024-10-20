@@ -4,8 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+import java.util.Set;
+
+
 @Table(name = "coffee_machine")
 @Entity
 public class CoffeeMachine {
@@ -13,10 +14,26 @@ public class CoffeeMachine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "volume_water")
-    private int volumeWater;
-    @Column(name = "volume_milk")
-    private int volumeMilk;
-    @Column(name = "volume_grain")
-    private int volumeGrain;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Set<Recipe> getRecipes() {
+        return recipes;
+    }
+
+    public void setRecipes(Set<Recipe> recipes) {
+        this.recipes = recipes;
+    }
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "coffee_machine_recipe",
+            joinColumns = @JoinColumn(name = "machine_id"),
+            inverseJoinColumns = @JoinColumn(name = "recipe_id"))
+    private Set<Recipe> recipes;
 }

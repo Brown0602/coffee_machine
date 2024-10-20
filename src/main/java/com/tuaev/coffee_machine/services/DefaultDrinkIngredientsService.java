@@ -1,8 +1,9 @@
 package com.tuaev.coffee_machine.services;
 
-import com.tuaev.coffee_machine.entity.Drink;
-import com.tuaev.coffee_machine.entity.DrinkIngredients;
+import com.tuaev.coffee_machine.entity.Recipe;
+import com.tuaev.coffee_machine.entity.RecipeIngredients;
 import com.tuaev.coffee_machine.repositories.DrinkIngredientsRepo;
+import java.util.Collections;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,8 @@ public class DefaultDrinkIngredientsService implements DrinkIngredientsService{
 
 
     @Override
-    public List<DrinkIngredients> getAllByIdDrinkId(Drink drink) {
-        return drinkIngredientsRepo.findAllByIdDrinkId(drink);
+    public List<RecipeIngredients> getAllByIdDrinkId(Recipe drink) {
+        return Collections.emptyList();
+//        return drinkIngredientsRepo.findAllByIdDrinkId(drink);
     }
 }

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -16,7 +15,6 @@ public class DefaultOrderService implements OrderService{
 
     private OrderRepo orderRepo;
     private DrinkService drinkService;
-    private CoffeeMachineService coffeeMachineService;
     private IngredientService ingredientService;
     private DrinkIngredientsService drinkIngredientsService;
 
@@ -25,30 +23,28 @@ public class DefaultOrderService implements OrderService{
         orderRepo.save(createOrder(orderDTO));
     }
 
+    @Override
+    public String findPopularDrink() {
+        return orderRepo.findPopularDrink();
+    }
+
     private List<Ingredient> getIngredients(){
         return null;
     }
 
     private Order createOrder(OrderDTO orderDTO){
-        Optional<Drink> drink = getDrink(orderDTO);
-        List<DrinkIngredients> drinkIngredients = drinkIngredientsService.getAllByIdDrinkId(drink.get());
-        CoffeeMachine coffeeMachine = getCoffeeMachine().get();
-//        coffeeMachine.setVolumeGrain(coffeeMachine.getVolumeGrain() - );
+        Optional<Recipe> drink = getDrink(orderDTO);
+        List<RecipeIngredients> drinkIngredients = drinkIngredientsService.getAllByIdDrinkId(drink.get());
         Order order = new Order();
-        order.setDrink(drink.get());
-        order.setDateTime(LocalDateTime.now());
-        order.setCoffeeMachine(getCoffeeMachine().get());
+
 
 
         return order;
     }
 
-    private Optional<CoffeeMachine> getCoffeeMachine(){
-        return coffeeMachineService.getCoffeeMachine();
-    }
 
-    private Optional<Drink> getDrink(OrderDTO orderDTO){
-        return drinkService.getByName(orderDTO.getName());
+    private Optional<Recipe> getDrink(OrderDTO orderDTO){
+        return drinkService.getByName(orderDTO.getCoffeeName());
     }
 
 }

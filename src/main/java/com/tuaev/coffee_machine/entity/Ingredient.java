@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.Set;
+
 @Getter
 @Setter
 @Table(name = "ingredients")
@@ -15,6 +18,8 @@ public class Ingredient {
     private Long id;
     @Column(name = "name")
     private String name;
-    @ManyToOne
-    private DrinkIngredients drinkIngredients;
+    @ManyToMany(mappedBy = "ingredients")
+    private Set<CoffeeMachineResources> coffeeMachineResources;
+    @ManyToMany(mappedBy = "ingredients")
+    private Set<RecipeIngredients> recipeIngredients;
 }
