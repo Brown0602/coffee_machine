@@ -31,8 +31,7 @@ public class DefaultOrderService implements OrderService{
 
     private Order createOrder(OrderDTO orderDTO){
         Optional<Drink> drink = getDrink(orderDTO);
-        List<DrinkIngredients> drinkIngredients = drinkIngredientsService.getAll().stream().filter(drinkIngredients1 ->
-                drinkIngredients1.getDrink().getId().equals(drink.get().getId())).toList();
+        List<DrinkIngredients> drinkIngredients = drinkIngredientsService.getAllByIdDrinkId(drink.get());
         CoffeeMachine coffeeMachine = getCoffeeMachine().get();
 //        coffeeMachine.setVolumeGrain(coffeeMachine.getVolumeGrain() - );
         Order order = new Order();
