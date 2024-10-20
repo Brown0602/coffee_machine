@@ -7,7 +7,6 @@ target/
 mvnw.cmd
 /mvnw
 src/main/resources/application.properties
-src/docker-compose.yaml
 
 
 ### STS ###
