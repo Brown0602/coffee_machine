@@ -6,15 +6,14 @@ import com.tuaev.coffee_machine.repositories.OrderRepo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
 public class DefaultOrderService implements OrderService{
 
     private OrderRepo orderRepo;
-    private DrinkService drinkService;
+    private RecipeService recipeService;
     private IngredientService ingredientService;
     private DrinkIngredientsService drinkIngredientsService;
 
@@ -28,23 +27,18 @@ public class DefaultOrderService implements OrderService{
         return orderRepo.findPopularDrink();
     }
 
-    private List<Ingredient> getIngredients(){
-        return null;
-    }
 
     private Order createOrder(OrderDTO orderDTO){
-        Optional<Recipe> drink = getDrink(orderDTO);
-        List<RecipeIngredients> drinkIngredients = drinkIngredientsService.getAllByIdDrinkId(drink.get());
+        Optional<Recipe> recipe = recipeService.findByName(orderDTO.getCoffeeName());
+        CoffeeMachine coffeeMachine = new CoffeeMachine();
         Order order = new Order();
-
-
+        order.setRecipe(recipe.get());
+        order.setLocalDateTime(LocalDateTime.now());
+        order.setCoffeeMachine(coffeeMachine);
 
         return order;
     }
 
 
-    private Optional<Recipe> getDrink(OrderDTO orderDTO){
-        return drinkService.getByName(orderDTO.getCoffeeName());
-    }
 
 }

@@ -1,16 +1,17 @@
 package com.tuaev.coffee_machine.controllers;
 
 import com.tuaev.coffee_machine.dto.OrderDTO;
+import com.tuaev.coffee_machine.dto.RecipeDTO;
 import com.tuaev.coffee_machine.services.CoffeeMachineService;
 import com.tuaev.coffee_machine.services.OrderService;
+import com.tuaev.coffee_machine.services.RecipeService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api/v1")
+
 @AllArgsConstructor
+@RequestMapping("/api/v1")
+@RestController
 public class CoffeeMachineController {
 
     private OrderService orderService;
@@ -23,12 +24,17 @@ public class CoffeeMachineController {
     }
 
     @PostMapping("/recipe")
-    public void createRecipe(@RequestBody RecipeDto recipeDto){
-        recipeService.addRecipe(recipeDto);
+    public String createRecipe(@RequestBody RecipeDTO recipeDto){
+        if (!recipeService.isRecipeName(recipeDto.getName())) {
+            recipeService.addRecipe(recipeDto);
+            return "Сохранён";
+        }
+        return "Такой рецепт уже есть";
     }
 
     @GetMapping("/statistics/popular")
     public String getStatistics(){
-        return  coffeeMachineService.findPopularDrink();
+        return  recipeService.findPopularityRecipe();
     }
+
 }

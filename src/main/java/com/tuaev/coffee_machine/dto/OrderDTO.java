@@ -6,6 +6,5 @@ import lombok.Getter;
 public class OrderDTO {
 
     private String coffeeName;
-    private Long id ;
 }
 

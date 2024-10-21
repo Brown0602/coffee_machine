@@ -1,6 +1,6 @@
 -- Создание таблицы ингредиентов
 CREATE TABLE ingredients (
-                             id SERIAL PRIMARY KEY,
+                             id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
                              name VARCHAR(255) NOT NULL
 );
 
@@ -13,22 +13,22 @@ CREATE TABLE recipe (
 
 -- Создание таблицы с ингредиентами для рецептов
 CREATE TABLE recipe_ingredients (
+                                    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
                                     recipe_id INT REFERENCES recipe(id),
                                     ingredients_id INT REFERENCES ingredients(id),
-                                    amount INT NOT NULL,  -- Количество ингредиента
-                                    PRIMARY KEY (recipe_id, ingredients_id)
+                                    amount INT NOT NULL  -- Количество ингредиента
 );
 
 -- Создание таблицы для кофемашин
 CREATE TABLE coffee_machine (
-                                id SERIAL PRIMARY KEY
+                                id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY
 );
 
 -- Таблица для связывания кофемашин с рецептами
 CREATE TABLE coffee_machine_recipe (
-                                       machine_id INT REFERENCES coffee_machine(id),
-                                       recipe_id INT REFERENCES recipe(id),
-                                       PRIMARY KEY (machine_id, recipe_id)
+                                       id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+                                       coffee_machine_id INT REFERENCES coffee_machine(id),
+                                       recipe_id INT REFERENCES recipe(id)
 );
 
 -- Таблица для управления запасами ингредиентов в кофемашине

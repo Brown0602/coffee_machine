@@ -3,10 +3,10 @@ package com.tuaev.coffee_machine.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.Set;
 
-
+@Getter
+@Setter
 @Table(name = "recipe")
 @Entity
 public class Recipe {
@@ -16,41 +16,13 @@ public class Recipe {
     private Long id;
     @Column(name = "name")
     private String name;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Set<CoffeeMachine> getCoffeeMachines() {
-        return coffeeMachines;
-    }
-
-    public void setCoffeeMachines(Set<CoffeeMachine> coffeeMachines) {
-        this.coffeeMachines = coffeeMachines;
-    }
-
-    @Column(name = "description")
-    private String description;
     @ManyToMany(mappedBy = "recipes")
     private Set<CoffeeMachine> coffeeMachines;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "recipe_ingredients",
+            joinColumns = @JoinColumn(name = "recipe_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredients_id")
+
+    )
+    private Set<Ingredient> ingredients;
 }

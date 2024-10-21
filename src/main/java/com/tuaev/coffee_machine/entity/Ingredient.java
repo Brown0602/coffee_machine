@@ -18,8 +18,10 @@ public class Ingredient {
     private Long id;
     @Column(name = "name")
     private String name;
+    @Column(name = "amount")
+    private int amount;
     @ManyToMany(mappedBy = "ingredients")
-    private Set<CoffeeMachineResources> coffeeMachineResources;
+    private Set<CoffeeMachine> coffeeMachines;
     @ManyToMany(mappedBy = "ingredients")
-    private Set<RecipeIngredients> recipeIngredients;
+    private Set<Recipe> recipes;
 }
