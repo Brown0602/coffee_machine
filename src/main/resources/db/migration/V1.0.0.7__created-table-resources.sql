@@ -1,0 +1,7 @@
+CREATE TABLE resources(
+
+    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    resource VARCHAR(64) NOT NULL,
+    amount INT NOT NULL
+
+);

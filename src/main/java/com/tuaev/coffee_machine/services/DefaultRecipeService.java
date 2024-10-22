@@ -1,9 +1,7 @@
 package com.tuaev.coffee_machine.services;
 
 import com.tuaev.coffee_machine.dto.RecipeDTO;
-import com.tuaev.coffee_machine.entity.Ingredient;
 import com.tuaev.coffee_machine.entity.Recipe;
-import com.tuaev.coffee_machine.entity.RecipeIngredients;
 import com.tuaev.coffee_machine.repositories.RecipeRepo;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;

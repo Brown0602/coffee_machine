@@ -1,5 +1,6 @@
 package com.tuaev.coffee_machine.controllers;
 
+import com.tuaev.coffee_machine.dto.CoffeeMachineDTO;
 import com.tuaev.coffee_machine.dto.OrderDTO;
 import com.tuaev.coffee_machine.dto.RecipeDTO;
 import com.tuaev.coffee_machine.services.CoffeeMachineService;
@@ -18,10 +19,17 @@ public class CoffeeMachineController {
     private RecipeService recipeService;
     private CoffeeMachineService coffeeMachineService;
 
+    @PostMapping("/coffee_machine")
+    public void addCoffeeMachine(@RequestBody CoffeeMachineDTO coffeeMachineDTO){
+        coffeeMachineService.save(coffeeMachineDTO);
+    }
+
     @PostMapping("/order")
     public void createOrder(@RequestBody OrderDTO orderDTO){
         orderService.save(orderDTO);
     }
+
+
 
     @PostMapping("/recipe")
     public String createRecipe(@RequestBody RecipeDTO recipeDto){

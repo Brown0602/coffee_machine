@@ -1,0 +1,1 @@
+ALTER TABLE coffee_machine_resources DROP COLUMN amount

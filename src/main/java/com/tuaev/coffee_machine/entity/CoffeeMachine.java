@@ -15,6 +15,8 @@ public class CoffeeMachine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+    @Column(name = "model")
+    private String model;
     @OneToOne(mappedBy = "coffeeMachine")
     private Order order;
     @ManyToMany(cascade = CascadeType.ALL)
@@ -25,6 +27,6 @@ public class CoffeeMachine {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "coffee_machine_resources",
             joinColumns = @JoinColumn(name = "machine_id"),
-            inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
-    private Set<Ingredient> ingredients;
+            inverseJoinColumns = @JoinColumn(name = "resource_id"))
+    private Set<Resource> resources;
 }

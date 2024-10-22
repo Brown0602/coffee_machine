@@ -1,0 +1,2 @@
+alter table coffee_machine_resources
+rename column ingredient_id to resource_id
