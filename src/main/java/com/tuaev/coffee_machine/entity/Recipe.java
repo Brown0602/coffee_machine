@@ -18,11 +18,10 @@ public class Recipe {
     private String name;
     @ManyToMany(mappedBy = "recipes")
     private Set<CoffeeMachine> coffeeMachines;
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "recipe_ingredients",
             joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "ingredients_id")
-
-    )
+            inverseJoinColumns = @JoinColumn(name = "ingredients_id"))
     private Set<Ingredient> ingredients;
 }

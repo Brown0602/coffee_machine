@@ -21,9 +21,10 @@ public class CoffeeMachine {
     private Order order;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "coffee_machine_recipe",
-            joinColumns = @JoinColumn(name = "machine_id"),
+            joinColumns = @JoinColumn(name = "coffee_machine_id"),
             inverseJoinColumns = @JoinColumn(name = "recipe_id"))
     private Set<Recipe> recipes;
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "coffee_machine_resources",
             joinColumns = @JoinColumn(name = "machine_id"),
