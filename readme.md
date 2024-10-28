@@ -27,3 +27,5 @@
 
 
 ![img_1.png](img_1.png)
+
+!х[img_отчёт.png](img_отчёт.png)
