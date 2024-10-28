@@ -2,6 +2,9 @@ package com.tuaev.coffee_machine.services;
 
 import com.tuaev.coffee_machine.dto.OrderDTO;
 import com.tuaev.coffee_machine.entity.*;
+import com.tuaev.coffee_machine.exception.NotEnoughResourcesException;
+import com.tuaev.coffee_machine.exception.NotFoundCoffeeMachineException;
+import com.tuaev.coffee_machine.exception.NotRecipeByNameException;
 import com.tuaev.coffee_machine.repositories.OrderRepo;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -16,12 +19,24 @@ public class DefaultOrderService implements OrderService {
     private OrderRepo orderRepo;
     private RecipeService recipeService;
     private CoffeeMachineService coffeeMachineService;
-    private ResourceService resourceService;
+    private IngredientService ingredientService;
 
     @Transactional
     @Override
     public void save(Long coffeeMachineId, OrderDTO orderDTO) {
+        CoffeeMachine coffeeMachine = coffeeMachineService.findById(coffeeMachineId).orElseThrow(NotFoundCoffeeMachineException::new);
+            List<Ingredient> ingredientsByRecipeName = ingredientService.findAllIngredientsByRecipeName(orderDTO.getCoffeeName());
+            if (!isMachineHasEnoughResources(coffeeMachine, ingredientsByRecipeName)){
+                throw new NotEnoughResourcesException();
+            }
         orderRepo.save(createOrder(coffeeMachineId, orderDTO));
+    }
+
+    private boolean isMachineHasEnoughResources(CoffeeMachine coffeeMachine, List<Ingredient> ingredientsByRecipeName) {
+        return coffeeMachine.getResources().stream().allMatch(
+                resource ->
+                        ingredientsByRecipeName.stream().allMatch(ingredient ->
+                                ingredient.getAmount() <= resource.getAmount()));
     }
 
     @Override
@@ -30,12 +45,11 @@ public class DefaultOrderService implements OrderService {
     }
 
     private Order createOrder(Long coffeeMachineId, OrderDTO orderDTO) {
+        CoffeeMachine coffeeMachine = coffeeMachineService.findById(coffeeMachineId).orElseThrow(NotFoundCoffeeMachineException::new);
         Order order = new Order();
-        Optional<Recipe> recipe = recipeService.findByName(orderDTO.getCoffeeName());
-        Optional<CoffeeMachine> coffeeMachine = coffeeMachineService.findById(coffeeMachineId);
-        if (recipe.isPresent() && coffeeMachine.isPresent()) {
-            Set<Ingredient> ingredients = recipe.get().getIngredients();
-            List<Resource> resources = resourceService.findByCoffeeMachineId(coffeeMachine.get().getId()).stream()
+        Recipe recipe = recipeService.findByName(orderDTO.getCoffeeName()).orElseThrow(NotRecipeByNameException::new);
+            Set<Ingredient> ingredients = recipe.getIngredients();
+            List<Resource> resources = coffeeMachine.getResources().stream()
                     .filter(resource ->
                             ingredients.stream().anyMatch(ingredient ->
                                     ingredient.getName().equals(resource.getType()))).toList();
@@ -46,11 +60,10 @@ public class DefaultOrderService implements OrderService {
                     }
                 }
             }
-            coffeeMachine.get().setResources(new HashSet<>(resources));
-            recipe.ifPresent(order::setRecipe);
+            coffeeMachine.setResources(new HashSet<>(resources));
+            order.setRecipe(recipe);
             order.setLocalDateTime(LocalDateTime.now());
-            coffeeMachine.ifPresent(order::setCoffeeMachine);
-        }
+            order.setCoffeeMachine(coffeeMachine);
         return order;
     }
 }

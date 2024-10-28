@@ -1,12 +1,15 @@
 package com.tuaev.coffee_machine.dto;
 
-import com.tuaev.coffee_machine.entity.Ingredient;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import java.util.List;
 
 @Getter
+@Schema(description = "Рецепт напитка")
 public class RecipeDTO {
 
+    @Schema(description = "Название рецепта напитка")
     private String name;
-    private List<Ingredient> ingredients;
+    @Schema(description = "Список ингредиентов для приготовления напитка по рецепту")
+    private List<IngredientDTO> ingredients;
 }

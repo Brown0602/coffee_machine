@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface RecipeService {
 
-    void save(Long CoffeeMachineId, RecipeDTO recipeDTO);
+    void save(Long coffeeMachineId, RecipeDTO recipeDTO);
 
     boolean isRecipeName(String name);
 
