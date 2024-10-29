@@ -1,0 +1,1 @@
+alter table recipe drop constraint recipe_name_key

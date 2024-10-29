@@ -1,18 +1,14 @@
 package com.tuaev.coffee_machine.services;
 
-import com.tuaev.coffee_machine.dto.IngredientDTO;
 import com.tuaev.coffee_machine.dto.RecipeDTO;
 import com.tuaev.coffee_machine.entity.CoffeeMachine;
-import com.tuaev.coffee_machine.entity.Ingredient;
 import com.tuaev.coffee_machine.entity.Recipe;
 import com.tuaev.coffee_machine.entity.Resource;
-import com.tuaev.coffee_machine.exception.NotFoundCoffeeMachineException;
 import com.tuaev.coffee_machine.exception.ResourcesNotEqualIngredientsException;
 import com.tuaev.coffee_machine.repositories.RecipeRepo;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -23,13 +19,27 @@ import java.util.Set;
 public class DefaultRecipeService implements RecipeService {
 
     private RecipeRepo recipeRepo;
-    private CoffeeMachineService coffeeMachineService;
+    private ResourceService resourceService;
+    private IngredientService ingredientService;
 
     @Transactional
     @Override
-    public void save(Long coffeeMachineId, RecipeDTO recipeDTO) {
-        Recipe recipe = createRecipe(coffeeMachineId, recipeDTO);
+    public void save(CoffeeMachine coffeeMachine, RecipeDTO recipeDTO) {
+        resourceService.isResourcesEqualIngredientsInRecipe(coffeeMachine.getResources(), recipeDTO.getIngredients());
+        Recipe recipe = createRecipe(coffeeMachine, recipeDTO);
         recipeRepo.save(recipe);
+    }
+
+    @Override
+    public Set<Recipe> buildRecipes(List<RecipeDTO> recipeDTOS) {
+        Set<Recipe> recipes = new HashSet<>();
+        for (RecipeDTO recipeDTO : recipeDTOS) {
+            Recipe recipe = new Recipe();
+            recipe.setName(recipeDTO.getName());
+            recipe.setIngredients(ingredientService.buildIngredients(recipeDTO));
+            recipes.add(recipe);
+        }
+        return recipes;
     }
 
     @Override
@@ -54,30 +64,19 @@ public class DefaultRecipeService implements RecipeService {
         return recipeRepo.findPopularityRecipe();
     }
 
-    private Recipe createRecipe(Long coffeeMachineId, RecipeDTO recipeDTO) {
-        Recipe recipe = new Recipe();
-        Set<Ingredient> ingredients = new HashSet<>();
-        CoffeeMachine coffeeMachine = coffeeMachineService.findById(coffeeMachineId).orElseThrow(NotFoundCoffeeMachineException::new);
+    private Recipe createRecipe(CoffeeMachine coffeeMachine, RecipeDTO recipeDTO) {
         Set<Resource> resources = coffeeMachine.getResources();
+        Set<CoffeeMachine> coffeeMachines = new HashSet<>();
+        coffeeMachines.add(coffeeMachine);
         if (!resources.stream().allMatch(resource ->
                 recipeDTO.getIngredients().stream().allMatch(ingredient ->
                         ingredient.getName().equals(resource.getType())))){
             throw new ResourcesNotEqualIngredientsException();
         }
-        Set<Recipe> recipes = coffeeMachine.getRecipes();
-        Set<CoffeeMachine> coffeeMachines = new HashSet<>();
-        recipes.add(recipe);
-        coffeeMachine.setRecipes(recipes);
-        coffeeMachines.add(coffeeMachine);
-        recipe.setCoffeeMachines(coffeeMachines);
+        Recipe recipe = new Recipe();
         recipe.setName(recipeDTO.getName());
-        for (IngredientDTO ingredientDTO : recipeDTO.getIngredients()) {
-            Ingredient ingredient = new Ingredient();
-            ingredient.setName(ingredientDTO.getName());
-            ingredient.setAmount(ingredientDTO.getAmount());
-            ingredients.add(ingredient);
-        }
-        recipe.setIngredients(ingredients);
+        recipe.setCoffeeMachines(coffeeMachines);
+        recipe.setIngredients(ingredientService.buildIngredients(recipeDTO));
         return recipe;
     }
 }

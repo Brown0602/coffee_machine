@@ -13,6 +13,6 @@ public interface CoffeeMachineService {
 
     ResponseEntity<String> save(CoffeeMachineDTO coffeeMachineDTO);
 
-    void updateResources(Long id, List<ResourceDTO> resourceDTOS);
+    ResponseEntity<String> updateResources(Long id, List<ResourceDTO> resourceDTOS);
 
 }
