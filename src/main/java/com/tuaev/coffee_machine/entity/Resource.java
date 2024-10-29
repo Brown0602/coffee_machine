@@ -20,7 +20,16 @@ public class Resource {
     private String type;
     @Column(name = "amount")
     private int amount;
+
     @JsonIgnore
     @ManyToMany(mappedBy = "resources")
     private Set<CoffeeMachine> coffeeMachine;
+
+    public Resource() {
+    }
+
+    public Resource(String type, int amount) {
+        this.type = type;
+        this.amount = amount;
+    }
 }

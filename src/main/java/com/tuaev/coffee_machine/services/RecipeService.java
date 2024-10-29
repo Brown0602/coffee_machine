@@ -15,6 +15,6 @@ public interface RecipeService {
 
     String findPopularityRecipe();
 
-    void isRecipeDuplicate(CoffeeMachine coffeeMachine, RecipeDTO recipeDTO);
+    void checkRecipeDuplicate(CoffeeMachine coffeeMachine, RecipeDTO recipeDTO);
 
 }

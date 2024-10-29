@@ -26,4 +26,12 @@ public class Recipe {
             joinColumns = @JoinColumn(name = "recipe_id"),
             inverseJoinColumns = @JoinColumn(name = "ingredients_id"))
     private Set<Ingredient> ingredients;
+
+    public Recipe() {
+    }
+
+    public Recipe(String name, Set<Ingredient> ingredients) {
+        this.name = name;
+        this.ingredients = ingredients;
+    }
 }

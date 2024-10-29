@@ -10,9 +10,9 @@ import com.tuaev.coffee_machine.repositories.RecipeRepo;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -22,32 +22,26 @@ public class DefaultRecipeService implements RecipeService {
     private IngredientService ingredientService;
 
     @Override
-    public void isRecipeDuplicate(CoffeeMachine coffeeMachine, RecipeDTO recipeDTO) {
+    public void checkRecipeDuplicate(CoffeeMachine coffeeMachine, RecipeDTO recipeDTO) {
         if (coffeeMachine.getRecipes().stream().anyMatch(recipe ->
                 recipe.getName().equals(recipeDTO.getName()))){
-            throw new RecipeAlreadyExistsException();
+            throw new RecipeAlreadyExistsException("Такой рецепт уже есть");
         }
     }
 
 
     @Override
     public Set<Recipe> buildRecipes(List<RecipeDTO> recipeDTOS) {
-        Set<Recipe> recipes = new HashSet<>();
-        for (RecipeDTO recipeDTO : recipeDTOS) {
-            Recipe recipe = new Recipe();
-            recipe.setName(recipeDTO.getName());
-            recipe.setIngredients(ingredientService.buildIngredients(recipeDTO));
-            recipes.add(recipe);
-        }
-        return recipes;
+        return recipeDTOS.stream().map(recipeDTO -> new Recipe(recipeDTO.getName(),
+                ingredientService.buildIngredients(recipeDTO))).collect(Collectors.toSet());
     }
 
     @Override
     public Recipe getRecipeByName(OrderDTO orderDTO, CoffeeMachine coffeeMachine) {
         return coffeeMachine.getRecipes().stream()
-                .filter(recipe1 -> recipe1.getName().equals(orderDTO.getCoffeeName()))
+                .filter(recipe -> recipe.getName().equals(orderDTO.getCoffeeName()))
                 .findFirst()
-                .orElseThrow(NotRecipeByNameException::new);
+                .orElseThrow(() -> new NotRecipeByNameException("Нет такого рецепта"));
     }
 
     @Transactional

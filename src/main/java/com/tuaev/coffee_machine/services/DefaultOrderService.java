@@ -27,9 +27,10 @@ public class DefaultOrderService implements OrderService {
     }
 
     private Order createOrder(Long coffeeMachineId, OrderDTO orderDTO) {
-        CoffeeMachine coffeeMachine = coffeeMachineService.findById(coffeeMachineId).orElseThrow(NotFoundCoffeeMachineException::new);
+        CoffeeMachine coffeeMachine = coffeeMachineService.findById(coffeeMachineId).orElseThrow(() ->
+                new NotFoundCoffeeMachineException("Нет такой кофемашины"));
         Set<Ingredient> recipeIngredients = ingredientService.getIngredientsByRecipeName(orderDTO, coffeeMachine);
-        resourceService.hasSufficientResourcesForRecipe(coffeeMachine.getResources(), recipeIngredients);
+        resourceService.checkSufficientResourcesForRecipe(coffeeMachine.getResources(), recipeIngredients);
         Recipe recipe = recipeService.getRecipeByName(orderDTO, coffeeMachine);
         Set<Resource> resources = resourceService.getResourcesByCoffeeMachine(coffeeMachine, recipe);
         coffeeMachine.setResources(resourceService.updateResourcesForRecipe(recipe, resources));

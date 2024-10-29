@@ -15,11 +15,11 @@ public interface ResourceService {
 
     Set<Resource> updateResources(Set<Resource> coffeeMachineResources, List<ResourceDTO> resourceDTOS);
 
-    void isResourcesEqualIngredientsInRecipe(Set<Resource> resources, List<IngredientDTO> ingredientDTOS);
+    void checkResourcesEqualIngredientsInRecipe(Set<Resource> resources, List<IngredientDTO> ingredientDTOS);
 
-    void isResourcesEqualIngredientsInRecipes(Set<Resource> resources, Set<Recipe> recipes);
+    void checkResourcesEqualIngredientsInRecipes(Set<Resource> resources, Set<Recipe> recipes);
 
-    void hasSufficientResourcesForRecipe(Set<Resource> coffeeMachineResources, Set<Ingredient> recipeIngredients);
+    void checkSufficientResourcesForRecipe(Set<Resource> coffeeMachineResources, Set<Ingredient> recipeIngredients);
 
     Set<Resource> getResourcesByCoffeeMachine(CoffeeMachine coffeeMachine, Recipe recipe);
 

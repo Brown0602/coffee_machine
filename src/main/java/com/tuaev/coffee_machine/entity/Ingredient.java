@@ -20,7 +20,16 @@ public class Ingredient {
     private String name;
     @Column(name = "amount")
     private int amount;
+
     @JsonIgnore
     @ManyToMany(mappedBy = "ingredients")
     private Set<Recipe> recipes;
+
+    public Ingredient() {
+    }
+
+    public Ingredient(String name, int amount) {
+        this.name = name;
+        this.amount = amount;
+    }
 }

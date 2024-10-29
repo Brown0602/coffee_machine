@@ -43,12 +43,13 @@ public class DefaultCoffeeMachineService implements CoffeeMachineService {
             return coffeeMachineRepo.save(coffeeMachine);
     }
 
+    @Transactional
     @Override
     public Recipe addRecipe(Long coffeeMachineId, RecipeDTO recipeDTO) {
         CoffeeMachine coffeeMachine = findById(coffeeMachineId).orElseThrow(NotFoundCoffeeMachineException::new);
         Set<Recipe> recipes = coffeeMachine.getRecipes();
-        recipeService.isRecipeDuplicate(coffeeMachine, recipeDTO);
-        resourceService.isResourcesEqualIngredientsInRecipe(coffeeMachine.getResources(), recipeDTO.getIngredients());
+        recipeService.checkRecipeDuplicate(coffeeMachine, recipeDTO);
+        resourceService.checkResourcesEqualIngredientsInRecipe(coffeeMachine.getResources(), recipeDTO.getIngredients());
         Recipe recipe = new Recipe();
         recipe.setName(recipeDTO.getName());
         recipe.setIngredients(ingredientService.buildIngredients(recipeDTO));
@@ -61,7 +62,7 @@ public class DefaultCoffeeMachineService implements CoffeeMachineService {
     private CoffeeMachine createCoffeeMachine(CoffeeMachineDTO coffeeMachineDTO) {
         Set<Resource> resources = resourceService.buildResources(coffeeMachineDTO.getResources());
         Set<Recipe> recipes = recipeService.buildRecipes(coffeeMachineDTO.getRecipes());
-        resourceService.isResourcesEqualIngredientsInRecipes(resources, recipes);
+        resourceService.checkResourcesEqualIngredientsInRecipes(resources, recipes);
         CoffeeMachine coffeeMachine = new CoffeeMachine();
         coffeeMachine.setModel(coffeeMachineDTO.getModel());
         coffeeMachine.setRecipes(recipes);
