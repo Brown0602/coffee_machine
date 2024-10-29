@@ -10,8 +10,6 @@ import com.tuaev.coffee_machine.exception.NotFoundCoffeeMachineException;
 import com.tuaev.coffee_machine.repositories.CoffeeMachineRepo;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -33,22 +31,20 @@ public class DefaultCoffeeMachineService implements CoffeeMachineService {
 
     @Transactional
     @Override
-    public ResponseEntity<String> save(CoffeeMachineDTO coffeeMachineDTO) {
-        coffeeMachineRepo.save(createCoffeeMachine(coffeeMachineDTO));
-        return ResponseEntity.status(HttpStatus.CREATED).body("Кофемашина создана");
+    public CoffeeMachine save(CoffeeMachineDTO coffeeMachineDTO) {
+        return coffeeMachineRepo.save(createCoffeeMachine(coffeeMachineDTO));
     }
 
     @Transactional
     @Override
-    public ResponseEntity<String> updateResources(Long id, List<ResourceDTO> resourceDTOS) {
+    public CoffeeMachine updateResources(Long id, List<ResourceDTO> resourceDTOS) {
             CoffeeMachine coffeeMachine = coffeeMachineRepo.findById(id).orElseThrow(NotFoundCoffeeMachineException::new);
             coffeeMachine.setResources(resourceService.updateResources(coffeeMachine.getResources(), resourceDTOS));
-            coffeeMachineRepo.save(coffeeMachine);
-            return ResponseEntity.status(HttpStatus.OK).body("Ресурсы кофемашины обновлены");
+            return coffeeMachineRepo.save(coffeeMachine);
     }
 
     @Override
-    public void addRecipe(Long coffeeMachineId, RecipeDTO recipeDTO) {
+    public Recipe addRecipe(Long coffeeMachineId, RecipeDTO recipeDTO) {
         CoffeeMachine coffeeMachine = findById(coffeeMachineId).orElseThrow(NotFoundCoffeeMachineException::new);
         Set<Recipe> recipes = coffeeMachine.getRecipes();
         recipeService.isRecipeDuplicate(coffeeMachine, recipeDTO);
@@ -57,7 +53,9 @@ public class DefaultCoffeeMachineService implements CoffeeMachineService {
         recipe.setName(recipeDTO.getName());
         recipe.setIngredients(ingredientService.buildIngredients(recipeDTO));
         recipes.add(recipe);
+        coffeeMachine.setRecipes(recipes);
         coffeeMachineRepo.save(coffeeMachine);
+        return recipe;
     }
 
     private CoffeeMachine createCoffeeMachine(CoffeeMachineDTO coffeeMachineDTO) {

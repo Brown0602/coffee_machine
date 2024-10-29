@@ -18,7 +18,7 @@ public class Order {
     @OneToOne
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private Recipe recipe;
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "coffee_machine_id", referencedColumnName = "id")
     private CoffeeMachine coffeeMachine;
     @Column(name = "order_time")

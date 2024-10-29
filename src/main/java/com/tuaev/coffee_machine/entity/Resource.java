@@ -1,5 +1,6 @@
 package com.tuaev.coffee_machine.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class Resource {
     private String type;
     @Column(name = "amount")
     private int amount;
+    @JsonIgnore
     @ManyToMany(mappedBy = "resources")
     private Set<CoffeeMachine> coffeeMachine;
 }

@@ -1,5 +1,6 @@
 package com.tuaev.coffee_machine.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,9 +18,9 @@ public class Recipe {
     private Long id;
     @Column(name = "name")
     private String name;
+    @JsonIgnore
     @ManyToMany(mappedBy = "recipes")
     private Set<CoffeeMachine> coffeeMachines;
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "recipe_ingredients",
             joinColumns = @JoinColumn(name = "recipe_id"),

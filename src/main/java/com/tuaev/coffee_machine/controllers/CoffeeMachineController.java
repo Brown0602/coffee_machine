@@ -4,6 +4,9 @@ import com.tuaev.coffee_machine.dto.CoffeeMachineDTO;
 import com.tuaev.coffee_machine.dto.OrderDTO;
 import com.tuaev.coffee_machine.dto.RecipeDTO;
 import com.tuaev.coffee_machine.dto.ResourceDTO;
+import com.tuaev.coffee_machine.entity.CoffeeMachine;
+import com.tuaev.coffee_machine.entity.Order;
+import com.tuaev.coffee_machine.entity.Recipe;
 import com.tuaev.coffee_machine.services.CoffeeMachineService;
 import com.tuaev.coffee_machine.services.OrderService;
 import com.tuaev.coffee_machine.services.RecipeService;
@@ -27,27 +30,26 @@ public class CoffeeMachineController {
 
     @Operation(summary = "Создаёт новую кофемашину", description = "Позволяет создать новую кофемашину")
     @PostMapping("/coffee_machine")
-    public ResponseEntity<String> addCoffeeMachine(@RequestBody CoffeeMachineDTO coffeeMachineDTO) {
-        return coffeeMachineService.save(coffeeMachineDTO);
+    public ResponseEntity<CoffeeMachine> addCoffeeMachine(@RequestBody CoffeeMachineDTO coffeeMachineDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(coffeeMachineService.save(coffeeMachineDTO));
     }
 
     @Operation(summary = "Обновляет ресурсы кофемашины")
     @PostMapping("/coffee_machine/{id}")
-    public ResponseEntity<String> updateResources(@PathVariable("id") Long id, @RequestBody List<ResourceDTO> resourceDTOS) {
-        return coffeeMachineService.updateResources(id, resourceDTOS);
+    public ResponseEntity<CoffeeMachine> updateResources(@PathVariable("id") Long id, @RequestBody List<ResourceDTO> resourceDTOS) {
+        return ResponseEntity.status(HttpStatus.OK).body(coffeeMachineService.updateResources(id, resourceDTOS));
     }
 
     @Operation(summary = "Создаёт заказ на определённую кофемашину")
     @PostMapping("/order/{coffeeMachineId}")
-    public ResponseEntity<String> createOrder(@PathVariable("coffeeMachineId") Long coffeeMachineId, @RequestBody OrderDTO orderDTO) {
-        return orderService.save(coffeeMachineId, orderDTO);
+    public ResponseEntity<Order> createOrder(@PathVariable("coffeeMachineId") Long coffeeMachineId, @RequestBody OrderDTO orderDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.save(coffeeMachineId, orderDTO));
     }
 
     @Operation(summary = "Добавляет рецепт к определённой кофемашины")
     @PostMapping("/recipe/{coffeeMachineId}")
-    public ResponseEntity<String> createRecipe(@PathVariable("coffeeMachineId") Long coffeeMachineId, @RequestBody RecipeDTO recipeDto) {
-        coffeeMachineService.addRecipe(coffeeMachineId, recipeDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Рецепт сохранён");
+    public ResponseEntity<Recipe> createRecipe(@PathVariable("coffeeMachineId") Long coffeeMachineId, @RequestBody RecipeDTO recipeDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(coffeeMachineService.addRecipe(coffeeMachineId, recipeDto));
     }
 
     @Operation(summary = "Выводит самый часто заказываемый напиток")

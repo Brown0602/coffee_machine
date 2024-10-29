@@ -1,8 +1,8 @@
 package com.tuaev.coffee_machine.services;
 
 import com.tuaev.coffee_machine.dto.OrderDTO;
-import org.springframework.http.ResponseEntity;
+import com.tuaev.coffee_machine.entity.Order;
 
 public interface OrderService {
-    ResponseEntity<String> save(Long coffeeMachineId, OrderDTO orderDTO);
+    Order save(Long coffeeMachineId, OrderDTO orderDTO);
 }

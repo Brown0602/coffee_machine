@@ -6,8 +6,6 @@ import com.tuaev.coffee_machine.exception.NotFoundCoffeeMachineException;
 import com.tuaev.coffee_machine.repositories.OrderRepo;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -24,9 +22,8 @@ public class DefaultOrderService implements OrderService {
 
     @Transactional
     @Override
-    public ResponseEntity<String> save(Long coffeeMachineId, OrderDTO orderDTO) {
-        orderRepo.save(createOrder(coffeeMachineId, orderDTO));
-        return ResponseEntity.status(HttpStatus.CREATED).body("Заказ сохранён");
+    public Order save(Long coffeeMachineId, OrderDTO orderDTO) {
+        return orderRepo.save(createOrder(coffeeMachineId, orderDTO));
     }
 
     private Order createOrder(Long coffeeMachineId, OrderDTO orderDTO) {

@@ -1,5 +1,6 @@
 package com.tuaev.coffee_machine.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,7 @@ public class CoffeeMachine {
     private Long id;
     @Column(name = "model")
     private String model;
+    @JsonIgnore
     @OneToOne(mappedBy = "coffeeMachine")
     private Order order;
     @ManyToMany(cascade = CascadeType.ALL)
@@ -24,7 +26,6 @@ public class CoffeeMachine {
             joinColumns = @JoinColumn(name = "coffee_machine_id"),
             inverseJoinColumns = @JoinColumn(name = "recipe_id"))
     private Set<Recipe> recipes;
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "coffee_machine_resources",
             joinColumns = @JoinColumn(name = "machine_id"),

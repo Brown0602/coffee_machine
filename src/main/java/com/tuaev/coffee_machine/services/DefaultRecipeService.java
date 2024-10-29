@@ -9,7 +9,6 @@ import com.tuaev.coffee_machine.exception.RecipeAlreadyExistsException;
 import com.tuaev.coffee_machine.repositories.RecipeRepo;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-
 import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
@@ -54,7 +53,6 @@ public class DefaultRecipeService implements RecipeService {
     @Transactional
     @Override
     public String findPopularityRecipe() {
-        return recipeRepo.findPopularityRecipe();
+        return recipeRepo.findMostPopularRecipe();
     }
-
 }
