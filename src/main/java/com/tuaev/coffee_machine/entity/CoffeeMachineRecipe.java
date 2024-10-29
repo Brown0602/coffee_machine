@@ -13,5 +13,4 @@ public class CoffeeMachineRecipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 }

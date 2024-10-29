@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Table(name = "orders")
 @Entity
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -22,5 +23,4 @@ public class Order {
     private CoffeeMachine coffeeMachine;
     @Column(name = "order_time")
     private LocalDateTime localDateTime;
-
 }

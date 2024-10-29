@@ -5,7 +5,4 @@ import org.springframework.http.ResponseEntity;
 
 public interface OrderService {
     ResponseEntity<String> save(Long coffeeMachineId, OrderDTO orderDTO);
-
-    String findPopularRecipe();
-
 }

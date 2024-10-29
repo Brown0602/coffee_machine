@@ -4,7 +4,6 @@ import com.tuaev.coffee_machine.dto.CoffeeMachineDTO;
 import com.tuaev.coffee_machine.dto.OrderDTO;
 import com.tuaev.coffee_machine.dto.RecipeDTO;
 import com.tuaev.coffee_machine.dto.ResourceDTO;
-import com.tuaev.coffee_machine.exception.NotFoundCoffeeMachineException;
 import com.tuaev.coffee_machine.services.CoffeeMachineService;
 import com.tuaev.coffee_machine.services.OrderService;
 import com.tuaev.coffee_machine.services.RecipeService;
@@ -47,14 +46,8 @@ public class CoffeeMachineController {
     @Operation(summary = "Добавляет рецепт к определённой кофемашины")
     @PostMapping("/recipe/{coffeeMachineId}")
     public ResponseEntity<String> createRecipe(@PathVariable("coffeeMachineId") Long coffeeMachineId, @RequestBody RecipeDTO recipeDto) {
-        if (!recipeService.isRecipeName(recipeDto.getName())) {
-            recipeService
-                    .save(coffeeMachineService.findById(coffeeMachineId)
-                    .orElseThrow(NotFoundCoffeeMachineException::new),
-                    recipeDto);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Такой рецепт уже есть");
+        coffeeMachineService.addRecipe(coffeeMachineId, recipeDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Рецепт сохранён");
     }
 
     @Operation(summary = "Выводит самый часто заказываемый напиток")

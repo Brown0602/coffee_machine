@@ -1,6 +1,7 @@
 package com.tuaev.coffee_machine.services;
 
 import com.tuaev.coffee_machine.dto.CoffeeMachineDTO;
+import com.tuaev.coffee_machine.dto.RecipeDTO;
 import com.tuaev.coffee_machine.dto.ResourceDTO;
 import com.tuaev.coffee_machine.entity.CoffeeMachine;
 import org.springframework.http.ResponseEntity;
@@ -14,5 +15,7 @@ public interface CoffeeMachineService {
     ResponseEntity<String> save(CoffeeMachineDTO coffeeMachineDTO);
 
     ResponseEntity<String> updateResources(Long id, List<ResourceDTO> resourceDTOS);
+
+    void addRecipe(Long coffeeMachineId, RecipeDTO recipeDTO);
 
 }

@@ -1,6 +1,7 @@
 package com.tuaev.coffee_machine.services;
 
 import com.tuaev.coffee_machine.dto.CoffeeMachineDTO;
+import com.tuaev.coffee_machine.dto.RecipeDTO;
 import com.tuaev.coffee_machine.dto.ResourceDTO;
 import com.tuaev.coffee_machine.entity.CoffeeMachine;
 import com.tuaev.coffee_machine.entity.Recipe;
@@ -23,6 +24,7 @@ public class DefaultCoffeeMachineService implements CoffeeMachineService {
     private CoffeeMachineRepo coffeeMachineRepo;
     private RecipeService recipeService;
     private ResourceService resourceService;
+    private IngredientService ingredientService;
 
     @Override
     public Optional<CoffeeMachine> findById(Long id) {
@@ -43,6 +45,19 @@ public class DefaultCoffeeMachineService implements CoffeeMachineService {
             coffeeMachine.setResources(resourceService.updateResources(coffeeMachine.getResources(), resourceDTOS));
             coffeeMachineRepo.save(coffeeMachine);
             return ResponseEntity.status(HttpStatus.OK).body("Ресурсы кофемашины обновлены");
+    }
+
+    @Override
+    public void addRecipe(Long coffeeMachineId, RecipeDTO recipeDTO) {
+        CoffeeMachine coffeeMachine = findById(coffeeMachineId).orElseThrow(NotFoundCoffeeMachineException::new);
+        Set<Recipe> recipes = coffeeMachine.getRecipes();
+        recipeService.isRecipeDuplicate(coffeeMachine, recipeDTO);
+        resourceService.isResourcesEqualIngredientsInRecipe(coffeeMachine.getResources(), recipeDTO.getIngredients());
+        Recipe recipe = new Recipe();
+        recipe.setName(recipeDTO.getName());
+        recipe.setIngredients(ingredientService.buildIngredients(recipeDTO));
+        recipes.add(recipe);
+        coffeeMachineRepo.save(coffeeMachine);
     }
 
     private CoffeeMachine createCoffeeMachine(CoffeeMachineDTO coffeeMachineDTO) {

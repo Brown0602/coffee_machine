@@ -24,6 +24,13 @@ public class CoffeeMachineExceptions{
         return new ErrorMessage("Не хватает ресурсов кофемашины").getMessage();
     }
 
+    @ExceptionHandler(RecipeAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public String recipeAlreadyExistsException(RecipeAlreadyExistsException recipeAlreadyExistsException){
+        return new ErrorMessage("Такой рецепт уже есть").getMessage();
+    }
+
     @ExceptionHandler(ResourcesNotEqualIngredientsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody

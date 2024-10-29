@@ -10,6 +10,7 @@ import java.util.Set;
 @Table(name = "recipe")
 @Entity
 public class Recipe {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
