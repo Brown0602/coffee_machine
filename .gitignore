@@ -6,7 +6,6 @@ target/
 .mvn
 mvnw.cmd
 /mvnw
-src/main/resources/application.properties
 
 
 ### STS ###

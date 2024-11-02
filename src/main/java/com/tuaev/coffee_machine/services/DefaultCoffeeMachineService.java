@@ -10,12 +10,14 @@ import com.tuaev.coffee_machine.exception.NotFoundCoffeeMachineException;
 import com.tuaev.coffee_machine.repositories.CoffeeMachineRepo;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 @Service
+@NoArgsConstructor
 @AllArgsConstructor
 public class DefaultCoffeeMachineService implements CoffeeMachineService {
 
@@ -38,7 +40,8 @@ public class DefaultCoffeeMachineService implements CoffeeMachineService {
     @Transactional
     @Override
     public CoffeeMachine updateResources(Long id, List<ResourceDTO> resourceDTOS) {
-            CoffeeMachine coffeeMachine = coffeeMachineRepo.findById(id).orElseThrow(NotFoundCoffeeMachineException::new);
+            CoffeeMachine coffeeMachine = coffeeMachineRepo.findById(id).orElseThrow(()->
+                    new NotFoundCoffeeMachineException("Нет такой кофемашины"));
             coffeeMachine.setResources(resourceService.updateResources(coffeeMachine.getResources(), resourceDTOS));
             return coffeeMachineRepo.save(coffeeMachine);
     }
@@ -46,7 +49,8 @@ public class DefaultCoffeeMachineService implements CoffeeMachineService {
     @Transactional
     @Override
     public Recipe addRecipe(Long coffeeMachineId, RecipeDTO recipeDTO) {
-        CoffeeMachine coffeeMachine = findById(coffeeMachineId).orElseThrow(NotFoundCoffeeMachineException::new);
+        CoffeeMachine coffeeMachine = findById(coffeeMachineId).orElseThrow(()->
+                new NotFoundCoffeeMachineException("Нет такой кофемашины"));
         Set<Recipe> recipes = coffeeMachine.getRecipes();
         recipeService.checkRecipeDuplicate(coffeeMachine, recipeDTO);
         resourceService.checkResourcesEqualIngredientsInRecipe(coffeeMachine.getResources(), recipeDTO.getIngredients());
